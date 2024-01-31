@@ -1,0 +1,51 @@
+{% extends "base.html" %} {% block content %}
+<!-- header section starts-->
+<header class="bg-dark py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">Invoice Processing Automation</h1>
+      <p class="lead fw-normal text-white-50 mb-0">
+        All the Uploaded Invoices.
+      </p>
+    </div>
+  </div>
+</header>
+<!-- header section ends-->
+<br />
+<br>
+<!-- for table display -->
+<div class="container" style="border: double;">
+  <table class="table">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">File Id</th>
+      <th scope="col">Invoice Class</th>
+      <th scope="col">Uploaded At</th>
+      <th scope="col">Classify with Our Trained Model</th>
+      <th scope="col">Uploaded Invoice</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for file in files %}
+    <tr>
+      <td>{{file.file_id}}</td>
+      <td>{{file.invoice_class}}</td>
+      <td>{{file.uploaded_at}}</td>
+      <td>
+        <form action="{% url 'classification_prediction' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="imgFile" value="{{ file.file.url }}" />
+          <input type="submit" value="Click to Classify">
+          <input type="hidden" name="file_id" value="{{ file.file_id }}" />
+        </form>
+      </td>
+      <td><a href="{{ file.file.url }}" target="_blank">View Invoice</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<br>
+<br>
+<br>
+{% endblock %}
